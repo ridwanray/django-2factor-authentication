@@ -2,13 +2,10 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
-from ..views import (AuthViewsets, CustomObtainTokenPairView,
-                     PasswordChangeView)
+from ..views import (CustomObtainTokenPairView,)
 
 app_name = "auth"
 router = DefaultRouter()
-router.register("", AuthViewsets,  basename="auth")
-router.register("change-password", PasswordChangeView, basename="password-change")
 
 urlpatterns = [
     path("login/", CustomObtainTokenPairView.as_view(), name="login"),

@@ -9,12 +9,9 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import os
 from pathlib import Path
-from corsheaders.defaults import default_headers
 from datetime import timedelta
 from decouple import config
-import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -46,7 +43,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'drf_spectacular',
-    'core.celery.CeleryConfig',
 
     #Local Apps
     'user',
@@ -101,7 +97,10 @@ LOGOUT_URL = "rest_framework:logout"
 
 
 DATABASES = {
-    "default": dj_database_url.config(default=config('DATABASE_URL'))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
@@ -197,17 +196,6 @@ LOGGING = {
     }
 }
 
-TOKEN_LIFESPAN = 10 #mins
-
-OTP_EXPIRE_TIME = 10 #mins
-
-
-
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_BROKER_URL = config('RABBITMQ_URL')
-FLOWER_BASIC_AUTH = os.environ.get('FLOWER_BASIC_AUTH')
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
@@ -248,8 +236,3 @@ SPECTACULAR_SETTINGS = {
     'OAUTH2_REFRESH_URL': None,
     'OAUTH2_SCOPES': None,
 }
-
-
-TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
-TWILIO_PHONE_NUMBER = config('TWILIO_PHONE_NUMBER')
