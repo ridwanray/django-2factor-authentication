@@ -40,11 +40,12 @@ class LoginView(generics.GenericAPIView):
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+        user: User = serializer.save()
         return Response(
             {
                 "success": True,
                 "user": user.id,
+                "qr_code": user.qr_code.url,
                 "message": "Login Successful. Proceed to 2FA",
             },
             status=200,

@@ -62,7 +62,6 @@ class VerifyOTPSerializer(serializers.Serializer):
         user: User = User.objects.filter(id=attrs.get("user_id")).first()
         if not user:
             raise exceptions.AuthenticationFailed("Authentication Failed.")
-        # if user.login_otp != attrs.get("otp") or not user.is_valid_otp():
         if (
             not check_password(attrs.get("otp"), user.login_otp)
             or not user.is_valid_otp()
