@@ -83,7 +83,6 @@ STATIC_URL = "static/"
 STATIC_ROOT = "static/"
 MEDIA_ROOT = "media/"
 MEDIA_URL = "media/"
-
 WSGI_APPLICATION = 'core.wsgi.application'
 WSGI_APPLICATION = "core.wsgi.application"
 ASGI_APPLICATION = "core.asgi.application"

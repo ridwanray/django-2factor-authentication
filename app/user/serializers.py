@@ -10,34 +10,9 @@ from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
 from rest_framework.serializers import ModelSerializer
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
-
-
-class CustomObtainTokenPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
-        refresh = self.get_token(self.user)
-        access_token = refresh.access_token
-        self.user.save_last_login()
-        data["refresh"] = str(refresh)
-        data["access"] = str(access_token)
-        return data
-
-    @classmethod
-    def get_token(cls, user: User):
-        if not user.verified:
-            raise exceptions.AuthenticationFailed(
-                _("Account not verified."), code="authentication"
-            )
-        token = super().get_token(user)
-        token.id = user.id
-        token["firstname"] = user.firstname
-        token["lastname"] = user.lastname
-        token["email"] = user.email
-        return token
 
 
 class UserSerializer(ModelSerializer):
@@ -49,6 +24,10 @@ class UserSerializer(ModelSerializer):
             "password": {"write_only": True},
             "qr_code": {"read_only": True},
         }
+    
+    def to_representation(self, instance):
+        print(instance.qr_code.url)
+        return super().to_representation(instance)
 
     def validate(self, attrs: dict):
         email = attrs.get("email").lower().strip()
@@ -87,10 +66,11 @@ class VerifyOTPSerializer(serializers.Serializer):
         user: User = User.objects.filter(id=attrs.get("user_id")).first()
         if not user:
             raise exceptions.AuthenticationFailed("Authentication Failed.")
-        #check_password
-        #check_password(raw_password, hashed_password)
-        #if user.login_otp != attrs.get("otp") or not user.is_valid_otp():
-        if not check_password(attrs.get("otp"), user.login_otp) or not user.is_valid_otp():
+        # if user.login_otp != attrs.get("otp") or not user.is_valid_otp():
+        if (
+            not check_password(attrs.get("otp"), user.login_otp)
+            or not user.is_valid_otp()
+        ):
             raise exceptions.AuthenticationFailed("Authentication Failed.")
         attrs["user"] = user
         return super().validate(attrs)
@@ -99,7 +79,7 @@ class VerifyOTPSerializer(serializers.Serializer):
         user: User = validated_data.get("user")
         refresh = RefreshToken.for_user(user)
         user.login_otp_used = True
-        user.save(update_fields=['login_otp_used'])
+        user.save(update_fields=["login_otp_used"])
         return {
             "refresh": str(refresh),
             "access": str(refresh.access_token),
@@ -129,5 +109,5 @@ class LoginSerialiazer(serializers.Serializer):
         user.login_otp = make_password(totp)
         user.otp_created_at = datetime.now(timezone.utc)
         user.login_otp_used = False
-        user.save(update_fields=["login_otp", "otp_created_at","login_otp_used"])
+        user.save(update_fields=["login_otp", "otp_created_at", "login_otp_used"])
         return user

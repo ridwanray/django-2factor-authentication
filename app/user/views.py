@@ -1,10 +1,8 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User
 from .serializers import (
-    CustomObtainTokenPairSerializer,
     VerifyOTPSerializer,
     UserSerializer,
     LoginSerialiazer,
@@ -19,6 +17,18 @@ class VerityOTPView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         login_info: dict = serializer.save()
         return Response(login_info,status=200)
+
+
+class  UserProfileView(generics.GenericAPIView):
+    """Returns user profile details"""
+    permission_classes =  [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get(self, request, format=None):
+        user = self.request.user
+        serializer = self.serializer_class(user)
+        return Response({"success": True, "data": serializer.data}, status=200)
+
 
 
 class LoginView(generics.GenericAPIView):
