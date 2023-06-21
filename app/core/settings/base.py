@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,7 +44,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
 
     #Local Apps
-    'user',
+    'user.apps.UserConfig',
 ]
 
 #USER MODEL
@@ -82,6 +81,8 @@ TEMPLATES = [
 
 STATIC_URL = "static/"
 STATIC_ROOT = "static/"
+MEDIA_ROOT = "media/"
+MEDIA_URL = "media/"
 
 WSGI_APPLICATION = 'core.wsgi.application'
 WSGI_APPLICATION = "core.wsgi.application"
@@ -102,12 +103,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# DATABASES = {
-#     "default": dj_database_url.config(default=config('DATABASE_URL'))
-# }
-
-
 
 
 # Password validation
@@ -229,8 +224,8 @@ SPECTACULAR_SETTINGS = {
         "displayRequestDuration": True
     },
     'UPLOADED_FILES_USE_URL': True,
-    'TITLE': 'Django DRF & OTP verification',
-    'DESCRIPTION': 'Django DRF & OTP verification',
+    'TITLE': 'TWO Factor Authentication(Django & DRF)',
+    'DESCRIPTION': 'TWO Factor Auth',
     'VERSION': '0.2.0',
     'LICENCE': {'name': 'BSD License'},
     'CONTACT': {'name': 'Ridwanray', 'email': 'alabarise@gmail.com'},

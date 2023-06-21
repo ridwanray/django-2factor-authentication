@@ -7,5 +7,3 @@ djangorestframework-simplejwt==5.2.0
 drf-spectacular==0.22.1
 pyotp==2.8.0
 qrcode==7.3.1
-dj-database-url==0.5.0
-psycopg2-binary==2.9.3

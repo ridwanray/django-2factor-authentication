@@ -28,4 +28,4 @@ app/logs/celery.log
 htmlcov
 /logs/
 **/logs/**
-
+media/
