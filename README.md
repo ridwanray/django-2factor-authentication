@@ -1,5 +1,6 @@
 # Django - DRF 2factor Authentication using an Authenticator App
-
+This guide how to implement two-factor authentication in Djanog&DRF using Authenticator Apps <br>
+Complete guide [Medium](https://ridwanray.medium.com/implementing-two-factor-authentication-2fa-with-django-and-django-rest-framework-drf-e945163b450a)
 
 ## Tools & Services:
 - Django & DRF : for building the APIs
