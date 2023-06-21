@@ -55,12 +55,6 @@ class CreateUserView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = UserSerializer
 
-    def get_queryset(self):
-        user: User = self.request.user
-        if user.is_admin:
-            return super().get_queryset().all()
-        return super().get_queryset().filter(id=user.id)
-
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

@@ -24,10 +24,6 @@ class UserSerializer(ModelSerializer):
             "password": {"write_only": True},
             "qr_code": {"read_only": True},
         }
-    
-    def to_representation(self, instance):
-        print(instance.qr_code.url)
-        return super().to_representation(instance)
 
     def validate(self, attrs: dict):
         email = attrs.get("email").lower().strip()
