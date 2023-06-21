@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     
     #Third-party Apps
     'corsheaders',
-    'django_filters',
     'drf_spectacular',
 
     #Local Apps
